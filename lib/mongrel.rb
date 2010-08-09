@@ -1,4 +1,3 @@
-
 # Standard libraries
 require 'socket'
 require 'tempfile'
@@ -186,6 +185,7 @@ module Mongrel
       rescue HttpParserError => e
         STDERR.puts "#{Time.now}: HTTP parse error, malformed request (#{params[Const::HTTP_X_FORWARDED_FOR] || client.peeraddr.last}): #{e.inspect}"
         STDERR.puts "#{Time.now}: REQUEST DATA: #{data.inspect}\n---\nPARAMS: #{params.inspect}\n---\n"
+        client.write(Const::ERROR_400_RESPONSE)
       rescue Errno::EMFILE
         reap_dead_workers('too many files')
       rescue Object => e
